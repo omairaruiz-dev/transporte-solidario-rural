@@ -26,18 +26,18 @@ export default function Formulario({ campos, validar, verificar, boton, mensaje 
   }
 
   return (
-    <form className="formulario" onSubmit={enviar} noValidate>
-      {ok && <p className="exito" role="status">{mensaje}</p>}
-      {fallo && (
-        <div className="alerta" role="alert">
-          <p>{fallo}</p>
-          <button type="button" className="boton" onClick={() => { setFallo(''); setValores({ ...valores, contrasena: '' }) }}>Reintentar</button>
-        </div>
-      )}
-      {campos.map((c) => (
-        <CampoFormulario key={c.id} {...c} valor={valores[c.id]} onChange={cambiar} error={errores[c.id]} />
-      ))}
-      <button className="boton boton-verde">{boton}</button>
-    </form>
+  <form className="formulario" onSubmit={enviar} noValidate>
+  {ok && <p className="exito" role="status">{mensaje}</p>}
+  {fallo && (
+  <div className="alerta" role="alert">
+  <p>{fallo}</p>
+  <button type="button" className="boton" onClick={() => { setFallo(''); setValores({ ...valores, contrasena: '' }) }}>Reintentar</button>
+  </div>
+  )}
+  {campos.map((c) => (
+  <CampoFormulario key={c.id} {...c} valor={valores[c.id]} onChange={cambiar} error={errores[c.id]} />
+  ))}
+  <button className="boton boton-verde">{boton}</button>
+  </form>
   )
 }
