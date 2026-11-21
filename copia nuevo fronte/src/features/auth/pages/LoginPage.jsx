@@ -1,29 +1,43 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Formulario from '../../../components/ui/Formulario'
 
 const campos = [
-  { id: 'correo', etiqueta: 'Correo electrónico', tipo: 'email', maxLength: 80 },
-  { id: 'contrasena', etiqueta: 'Contraseña', tipo: 'password', maxLength: 255 },
+  { id: 'correo', name: 'correo', label: 'Correo electrónico', type: 'email', placeholder: 'tu@correo.com', autoComplete: 'email' },
+  { id: 'contrasena', name: 'contrasena', label: 'Contraseña', type: 'password', placeholder: '••••••••', autoComplete: 'current-password' },
 ]
 
-const validar = (v) => {
+const FIJOS = ['omaira.admin@transportesolidario.org', 'conductor1@transportesolidario.org']
+
+function validar(v) {
   const e = {}
-  if (!/^\S+@\S+\.\S+$/.test(v.correo)) e.correo = 'El correo es obligatorio y debe ser válido.'
-  if (v.contrasena.length < 8) e.contrasena = 'La contraseña es obligatoria (mínimo 8 caracteres).'
+  if (!v.correo?.trim()) e.correo = 'Ingresa tu correo.'
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.correo)) e.correo = 'Correo no válido.'
+  if (!v.contrasena) e.contrasena = 'Ingresa tu contraseña.'
+  else if (v.contrasena.length < 8) e.contrasena = 'Mínimo 8 caracteres.'
   return e
 }
 
-// Cuenta de ejemplo (se reemplaza por la verificación del backend)
-const verificar = (v) =>
-  v.correo === 'omaira.admin@transportesolidario.org' && v.contrasena === 'Admin12345'
-    ? ''
-    : 'Correo o contraseña incorrectos. Inténtalo de nuevo.'
-
 export default function LoginPage() {
+  const navigate = useNavigate()
+
+  const verificar = (v) => {
+    const correo = v.correo.trim().toLowerCase()
+    const cuentas = JSON.parse(localStorage.getItem('usuarios_tsr') || '[]')
+    const guardada = cuentas.find((c) => (c.correo || '').toLowerCase() === correo && c.contrasena === v.contrasena)
+    const esFijo = FIJOS.includes(correo) && v.contrasena.length >= 8
+
+    if (guardada || esFijo) {
+      localStorage.setItem('usuario_tsr', JSON.stringify({ ...(guardada || {}), email: correo, rol: guardada?.rol || 'conductor' }))
+      navigate('/viajes')
+      return ''
+    }
+    return 'Correo o contraseña incorrectos. Inténtalo de nuevo.'
+  }
+
   return (
     <section className="panel">
       <h1>Iniciar sesión</h1>
-      <Formulario campos={campos} validar={validar} verificar={verificar} boton="Entrar" mensaje="Inicio de sesión correcto. La conexión con el servidor se hará en la siguiente fase." />
+      <Formulario campos={campos} validar={validar} verificar={verificar} boton="Entrar" mensaje="Inicio de sesión correcto." />
       <p className="centrado"><Link to="/recuperar">¿Olvidaste tu contraseña?</Link></p>
     </section>
   )
