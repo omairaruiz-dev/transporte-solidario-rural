@@ -4,6 +4,7 @@ import SolicitarViajePage from '../features/solicitudes/pages/SolicitarViajePage
 import RegistroPage from '../features/auth/pages/RegistroPage'
 import LoginPage from '../features/auth/pages/LoginPage'
 import RecuperarPage from '../features/auth/pages/RecuperarPage'
+import GestionViajes from '../features/viajes/pages/GestionViajes'
 
 export default function AppRouter() {
   return (
@@ -12,6 +13,7 @@ export default function AppRouter() {
       <Route path="/solicitar-viaje" element={<SolicitarViajePage />} />
       <Route path="/registro" element={<RegistroPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/viajes" element={<GestionViajes />} />
       <Route path="/recuperar" element={<RecuperarPage />} />
       <Route path="*" element={<h1>Página no encontrada</h1>} />
     </Routes>
